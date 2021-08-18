@@ -1,0 +1,5 @@
+---
+# tasks file for store_violation
+- name: Add output to list
+  set_fact:
+    capture_output: "{{ capture_output|default([]) + [new_item] }}"

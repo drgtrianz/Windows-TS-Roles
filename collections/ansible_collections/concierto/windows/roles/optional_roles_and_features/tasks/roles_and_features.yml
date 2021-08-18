@@ -1,0 +1,16 @@
+# tasks file for optional_roles_and_features
+
+- name: "windows : {{ roles_and_feature.key }} {{ ' install' if roles_and_feature.value else ' uninstall' }}"
+  win_dsc:
+    resource_name: WindowsFeature
+    Name: '{{ roles_and_feature.key }}'
+    Ensure: "{{ 'Present' if roles_and_feature.value else 'Absent' }}"
+  register: windscout
+  
+- name: Capture results of {{'Installation' if roles_and_feature.value else 'Uninstallation' }} of {{ roles_and_feature.key }}
+  include_role:
+    name: capture_output
+  vars:
+    new_item: "{{inventory_hostname}},{{ansible_ip_addresses|first}},{{ansible_os_name}},{{'Install' if roles_and_feature.value else 'Uninstall'}} {{roles_and_feature.key}}, {{(windscout.failed == false) | ternary ((windscout.changed == true)| ternary( roles_and_feature.key+' has been '+ ('installed successfully' if roles_and_feature.value else 'uninstalled successfully')+(' ;Requires reboot' if windscout.reboot_required else ' ;Reboot not required'),roles_and_feature.key+' already exists' if roles_and_feature.value else roles_and_feature.key+' not installed' ),(roles_and_feature.key+' installation' if roles_and_feature.value else ' uninstallation')+' got failed. This may due to the feature not found or some other error')}}"
+  when: windscout is defined
+  #windscout.msg.split(':').2|default(omit)

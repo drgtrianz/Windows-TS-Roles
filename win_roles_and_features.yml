@@ -1,0 +1,28 @@
+---
+# site.yml entrypoint
+- name: playbook to install/uninstall windows features 
+  hosts: all
+  strategy: free
+  gather_facts: False
+  pre_tasks:
+    - setup:
+        gather_subset:
+          - '!all'
+          - 'network'
+  
+  tasks:
+    - block: 
+      - name: Add windows features role
+        import_role:
+          name: concierto.windows.optional_roles_and_features
+        vars:
+          roles_and_features:
+             {"{{survey_feature_name| default('telnet')}}":"{{True if survey_feature_enabled|default('Disable') == 'Enable' else False }}"}
+            # 'Telnet-Client': False
+        tags: always
+      ignore_errors: True
+    
+- name: Consolidate Output
+  import_playbook: consolidate_output.yml
+  # when: generate_csv == 'yes'
+    

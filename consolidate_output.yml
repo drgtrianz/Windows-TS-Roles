@@ -1,0 +1,25 @@
+- name: Consolidate the results in CSV
+  hosts: all
+  run_once: true
+  become: no
+  gather_facts: no
+  tasks:   
+    - name: set facts the CSV output
+      set_fact:
+        csv_output: "{{capture_output | list| join('\n') |replace('[', '') |replace(']', '')}}"
+      when: (capture_output | join('\n'))|length|int > 0
+    - block:
+      - name: create csv file with consolidated output
+        copy:
+          dest: "{{ playbook_dir }}/Windows_automations_{{ tower_job_id }}_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}.csv"
+          content: "Hostname,Ipaddress,Operating_System,Description,Status\n{{ csv_output }}" 
+        register: attachment_created
+      - debug: var=attachment_created
+      - block:
+        - name: Print CSV File path
+          debug:
+            msg: "CSV file is created in the following path {{ attachment_created.dest }}"
+          ignore_errors: true
+        when: attachment_created.failed == false
+      when: csv_output|length > 0
+      delegate_to: localhost 

@@ -1,0 +1,12 @@
+---
+# tasks file for optional_roles_and_features
+
+- name: 'include windows role and features'
+  include_tasks: roles_and_features.yml
+  loop: "{{ roles_and_features | dict2items }}"
+  loop_control:
+    loop_var: roles_and_feature
+  register: winfeature
+  tags:
+    - windows_features
+    - configuration

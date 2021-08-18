@@ -1,0 +1,25 @@
+---
+# defaults file for task_scheduler
+
+# List of Tasks Scheduler, the single parameters
+# can be taken from the documentation of Ansible.
+# https://docs.ansible.com/ansible/latest/modules/win_scheduled_task_module.html
+#
+# Example:
+# 
+# scheduled_tasks:
+#   - name: 'Notepad launcher'
+#     description: 'This task launch notepad evry Day at 12:00'
+#     actions:
+#       - path: 'c:\windows\system32\notepad.exe'
+#   #  working_directory: 'C:\scripts\'
+#   #  arguments: '-ExecutionPolicy Bypass -File "C:\scripts\kill-process.ps1"'
+#     triggers:
+#       - type: daily
+#         start_boundary: '2021-08-09T12:00:00'
+#     username: SYSTEM
+#     state: present
+#     enabled: true
+#
+
+# scheduled_tasks:

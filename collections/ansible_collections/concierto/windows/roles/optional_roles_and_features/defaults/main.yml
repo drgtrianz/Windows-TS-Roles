@@ -1,0 +1,6 @@
+---
+# defaults file for optional_roles_and_features
+
+roles_and_features:
+    'TelnetClients': true
+

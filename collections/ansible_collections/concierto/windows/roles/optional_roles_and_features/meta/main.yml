@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Jayaganesh Kumar
+  description: 'This role install or uninstall Windows (optional) features and roles.'
+  company: Trianz Digital Holdings Pvt Ltd
+  license: license (GPL-2.0-or-later, MIT, etc)
+  min_ansible_version: 2.9
+  platforms:
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags: []
+
+dependencies: []
+
+  

@@ -1,0 +1,36 @@
+---
+# site.yml entrypoint
+- name: playbook to add/modify/delete a task scheduler job 
+  hosts: all
+  strategy: free
+  gather_facts: False
+  pre_tasks:
+    - setup:
+        gather_subset:
+          - '!all'
+          - 'network'
+  
+  tasks:
+    - block: 
+      - name: Add task scheduler role
+        import_role:
+          name: concierto.windows.task_scheduler
+        vars:
+          scheduled_tasks:
+            - name: "{{survey_scheduler_name|default('sample task')}}" #'Notepad launcher'
+              description: "{{survey_scheduler_description}}" #'This task launch notepad evry Day at 12:00'
+              actions:
+                - path: "{{survey_action_path}}" #c:\windows\system32\notepad.exe
+              triggers:
+                - type: "{{suvery_trigger_type}}" #daily
+                  start_boundary: "{{survey_trigger_date}}" #'2021-08-11T12:00:00'
+              username: "{{survey_scheduled_user|default('SYSTEM')}}" #SYSTEM
+              enabled: true
+              state: "{{survey_scheduler_status|default('absent')}}" #present
+        tags: always
+      ignore_errors: True
+    
+- name: Consolidate Output
+  import_playbook: consolidate_output.yml
+  # when: generate_csv == 'yes'
+    
